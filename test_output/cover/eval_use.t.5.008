@@ -4,8 +4,8 @@ Reading database from ...
 ------------------------------------------ ------ ------ ------ ------ ------
 File                                         stmt   bran   cond    sub  total
 ------------------------------------------ ------ ------ ------ ------ ------
-tests/eval2                                 100.0  100.0  100.0  100.0  100.0
-Total                                       100.0  100.0  100.0  100.0  100.0
+tests/eval_use.t                             87.5   50.0    n/a   80.0   83.9
+Total                                        87.5   50.0    n/a   80.0   83.9
 ------------------------------------------ ------ ------ ------ ------ ------
 
 
@@ -15,25 +15,7 @@ OS: ...
 Start: ...
 Finish: ...
 
-Run: ...
-Perl version: ...
-OS: ...
-Start: ...
-Finish: ...
-
-Run: ...
-Perl version: ...
-OS: ...
-Start: ...
-Finish: ...
-
-Run: ...
-Perl version: ...
-OS: ...
-Start: ...
-Finish: ...
-
-tests/eval2
+tests/eval_use.t
 
 line  err   stmt   bran   cond    sub   code
 1                                       #!/usr/bin/perl
@@ -45,30 +27,49 @@ line  err   stmt   bran   cond    sub   code
 7                                       # The latest version of this software should be available from my homepage:
 8                                       # http://www.pjcj.net
 9                                       
-10             4                    4   use lib "tests";
-               4                        
-               4                        
-11                                      
-12             4           100          $x = shift || 0;
-13             4                        print "1 - $x\n";
-14             4    100             2   if ($x) { eval 'use E2' }
-               2                        
-               2                        
-               2                        
-               2                        
-15             4                        print "3 - $x\n";
-16             4    100             2   if ($x < 4) { eval 'use E3' }
-               2                        
-               2                        
-               2                        
-               2                        
-17             4                        print "4 - $x\n";
-18             4    100             3   if ($x < 6) { eval 'use E4' }
-               3                        
-               3                        
-               3                        
-               3                        
-19             4                        print "5 - $x\n";
+10             1                    1   use strict;
+               1                        
+               1                        
+11             1                    1   use warnings;
+               1                        
+               1                        
+12                                      
+13             1                    1   use Devel::Cover::Test;
+               1                        
+               1                        
+14                                      
+15    ***      1     50                 if ($] == 5.008007)
+16                                      {
+17    ***      0                            eval "use Test::More skip_all => 'Crashes 5.8.7'";
+18    ***      0                            exit;
+19                                      }
+20                                      
+21                                      my $run_test = sub
+22                                      {
+23             1                    1       my $test = shift;
+24                                      
+25             1                            $test->run_command($test->test_command);
+26                                      
+27             1                            $test->{test_parameters} .= " -merge 1";
+28                                      
+29             1                            $test->{test_file_parameters} = "5";
+30             1                            $test->run_command($test->test_command);
+31                                      
+32             1                            $test->{test_file_parameters} = "7";
+33             1                            $test->run_command($test->test_command);
+34                                      
+35             1                            $test->{test_file_parameters} = "0";
+36             1                            $test->run_command($test->test_command);
+37             1                        };
+38                                      
+39                                      Devel::Cover::Test->new
+40                                      (
+41                                          "eval2",
+42                                          golden_test => "eval_use.t",
+43                                          run_test    => $run_test,
+44                                          changes     => [ 'if (/^Run: /) { $get_line->() for 1 .. 5; redo }' ],
+45    ***      0                    0       tests       => sub { $_[0] - 24 },  # number of lines deleted above
+46             1                        )->run_test;
 
 
 Branches
@@ -76,29 +77,24 @@ Branches
 
 line  err      %   true  false   branch
 ----- --- ------ ------ ------   ------
-14           100      2      2   if ($x)
-16           100      2      2   if ($x < 4)
-18           100      3      1   if ($x < 6)
-
-
-Conditions
-----------
-
-or 2 conditions
-
-line  err      %      l     !l   expr
------ --- ------ ------ ------   ----
-12           100      2      2   shift @ARGV || 0
+15    ***     50      0      1   if ($] == 5.008007)
 
 
 Covered Subroutines
 -------------------
 
-Subroutine Count Location      
----------- ----- --------------
-BEGIN          4 tests/eval2:10
-BEGIN          2 tests/eval2:14
-BEGIN          2 tests/eval2:16
-BEGIN          3 tests/eval2:18
+Subroutine Count Location           
+---------- ----- -------------------
+BEGIN          1 tests/eval_use.t:10
+BEGIN          1 tests/eval_use.t:11
+BEGIN          1 tests/eval_use.t:13
+__ANON__       1 tests/eval_use.t:23
+
+Uncovered Subroutines
+---------------------
+
+Subroutine Count Location           
+---------- ----- -------------------
+__ANON__       0 tests/eval_use.t:45
 
 

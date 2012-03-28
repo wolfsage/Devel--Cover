@@ -1,0 +1,119 @@
+Reading database from ...
+
+
+------------------------------------------ ------ ------ ------ ------ ------
+File                                         stmt   bran   cond    sub  total
+------------------------------------------ ------ ------ ------ ------ ------
+tests/md5.t                                  62.9   10.0    n/a   71.4   53.8
+Total                                        62.9   10.0    n/a   71.4   53.8
+------------------------------------------ ------ ------ ------ ------ ------
+
+
+Run: ...
+Perl version: ...
+OS: ...
+Start: ...
+Finish: ...
+
+tests/md5.t
+
+line  err   stmt   bran   cond    sub   code
+1                                       #!/usr/bin/perl
+2                                       
+3                                       # Copyright 2002-2011, Paul Johnson (pjcj@cpan.org)
+4                                       
+5                                       # This software is free.  It is licensed under the same terms as Perl itself.
+6                                       
+7                                       # The latest version of this software should be available from my homepage:
+8                                       # http://www.pjcj.net
+9                                       
+10             1                    1   use strict;
+               1                        
+               1                        
+11             1                    1   use warnings;
+               1                        
+               1                        
+12                                      
+13             1                    1   use File::Copy;
+               1                        
+               1                        
+14                                      
+15             1                    1   use Devel::Cover::Inc;
+               1                        
+               1                        
+16             1                    1   use Devel::Cover::Test;
+               1                        
+               1                        
+17                                      
+18             1                        my $base = $Devel::Cover::Inc::Base;
+19                                      
+20             1                        my $t  = "md5";
+21             1                        my $ft = "$base/tests/$t";
+22             1                        my $fg = "$base/tests/trivial";
+23                                      
+24    ***      1     50                 if ($] == 5.008007)
+25                                      {
+26    ***      0                            eval "use Test::More skip_all => 'Crashes 5.8.7'";
+27    ***      0                            exit;
+28                                      }
+29                                      
+30                                      my $run_test = sub
+31                                      {
+32    ***      0                    0       my $test = shift;
+33                                      
+34    ***      0      0                     copy($fg, $ft) or die "Cannot copy $fg to $ft: $!";
+35                                      
+36    ***      0      0                     open T, ">>$ft" or die "Cannot open $ft: $!";
+37    ***      0                            print T "# blah blah\n";
+38    ***      0      0                     close T or die "Cannot close $ft: $!";
+39                                      
+40    ***      0                            $test->run_command($test->test_command);
+41                                      
+42    ***      0                            sleep 1;
+43                                      
+44    ***      0      0                     copy($fg, $ft) or die "Cannot copy $fg to $ft: $!";
+45                                      
+46    ***      0                            $test->{test_parameters} .= " -merge 1";
+47    ***      0                            $test->run_command($test->test_command);
+48             1                        };
+49                                      
+50                                      my $test = Devel::Cover::Test->new
+51                                      (
+52                                          $t,
+53                                          run_test => $run_test,
+54    ***      0                    0       end      => sub { unlink $ft },
+55             1                        )->run_test;
+
+
+Branches
+--------
+
+line  err      %   true  false   branch
+----- --- ------ ------ ------   ------
+24    ***     50      0      1   if ($] == 5.008007)
+34    ***      0      0      0   unless copy($fg, $ft)
+36    ***      0      0      0   unless open T, ">>$ft"
+38    ***      0      0      0   unless close T
+44    ***      0      0      0   unless copy($fg, $ft)
+
+
+Covered Subroutines
+-------------------
+
+Subroutine Count Location      
+---------- ----- --------------
+BEGIN          1 tests/md5.t:10
+BEGIN          1 tests/md5.t:11
+BEGIN          1 tests/md5.t:13
+BEGIN          1 tests/md5.t:15
+BEGIN          1 tests/md5.t:16
+
+Uncovered Subroutines
+---------------------
+
+Subroutine Count Location      
+---------- ----- --------------
+__ANON__       0 tests/md5.t:32
+__ANON__       0 tests/md5.t:54
+
+

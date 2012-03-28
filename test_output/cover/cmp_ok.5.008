@@ -1,12 +1,11 @@
 Reading database from ...
-Devel::Cover: Deleting old coverage for changed file tests/md5
 
 
 ------------------------------------------ ------ ------ ------ ------ ------
 File                                         stmt   bran   cond    sub  total
 ------------------------------------------ ------ ------ ------ ------ ------
-tests/md5                                   100.0    n/a    n/a    n/a  100.0
-Total                                       100.0    n/a    n/a    n/a  100.0
+tests/cmp_ok                                100.0    n/a    n/a  100.0  100.0
+Total                                       100.0    n/a    n/a  100.0  100.0
 ------------------------------------------ ------ ------ ------ ------ ------
 
 
@@ -16,13 +15,7 @@ OS: ...
 Start: ...
 Finish: ...
 
-Run: ...
-Perl version: ...
-OS: ...
-Start: ...
-Finish: ...
-
-tests/md5
+tests/cmp_ok
 
 line  err   stmt   bran   cond    sub   code
 1                                       #!/usr/bin/perl
@@ -34,6 +27,25 @@ line  err   stmt   bran   cond    sub   code
 7                                       # The latest version of this software should be available from my homepage:
 8                                       # http://www.pjcj.net
 9                                       
-10             1                        my $x = 1;
+10                                      # test case for RT #63568 https://rt.cpan.org/Public/Bug/Display.html?id=63568
+11                                      
+12                                      # __COVER__ skip_test $] < 5.008 || !(eval "use Test::More; 23")
+13                                      # __COVER__ skip_reason Test::More not available
+14                                      
+15             1                    1   use Test::More;
+               1                        
+               1                        
+16                                      
+17             1                        plan tests => 1;
+18                                      
+19             1                        cmp_ok("", "eq", "");
+
+
+Covered Subroutines
+-------------------
+
+Subroutine Count Location       
+---------- ----- ---------------
+BEGIN          1 tests/cmp_ok:15
 
 
